@@ -391,7 +391,25 @@ const uploadInvoice = async (req, res,next) => {
             });
         }
 
-        const result = await uploadToCloudinary(req.file.buffer);
+        let result;
+
+        try{
+
+            result = await uploadToCloudinary(req.file.buffer);
+
+        }
+        catch(uploadError){
+
+            // Cloudinary's own error ("Must supply api_key" etc.) is a
+            // config problem on our side, not something the user caused -
+            // don't leak the raw SDK message to them.
+            console.error("Cloudinary upload failed:", uploadError.message);
+
+            return res.status(500).json({
+                message: "Invoice upload is not configured correctly on the server. Check Cloudinary credentials in backend/.env."
+            });
+
+        }
 
         asset.invoiceUrl = result.secure_url;
 
