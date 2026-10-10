@@ -19,7 +19,7 @@ function Layout({children}){
                 <Navbar />
 
 
-                <main className="p-8 max-w-5xl">
+                <main className="p-8 max-w-7xl">
 
                     {children}
 
