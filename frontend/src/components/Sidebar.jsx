@@ -67,8 +67,9 @@ function Sidebar(){
 
             </nav>
 
-            <div className="px-5 py-5 text-xs text-slate-400/60 border-t border-white/10">
-                Asset &amp; subscription registry
+            <div className="flex items-center gap-2 pl-6 pr-5 py-5 text-xs text-slate-400/60 border-t border-white/10">
+                <span className="w-1 h-1 rounded-full bg-slate-400/60 shrink-0" aria-hidden="true" />
+                <span>Asset &amp; subscription registry</span>
             </div>
 
         </div>
