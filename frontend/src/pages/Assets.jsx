@@ -8,6 +8,16 @@ import {
 import Layout from "../components/Layout";
 import AssetDetailsModal from "./AssetDetailsModal";
 import { WorkspaceContext } from "../context/WorkspaceContext";
+import {
+    inputCls,
+    primaryBtnCls,
+    secondaryBtnCls,
+    PageHeading,
+    ErrorBanner,
+    EmptyState,
+    Row,
+    Tag
+} from "../components/ui";
 
 import {
     getAssets,
@@ -247,9 +257,9 @@ function Assets(){
             (new Date(asset.warrantyExpiry) - new Date()) / (1000*60*60*24)
         );
 
-        if(days < 0)  return { text:"Warranty expired", cls:"bg-red-100 text-red-700" };
-        if(days <= 30) return { text:`Expires in ${days}d`, cls:"bg-orange-100 text-orange-700" };
-        return { text:"Under warranty", cls:"bg-green-100 text-green-700" };
+        if(days < 0)  return { text:"Warranty expired", tone:"rust" };
+        if(days <= 30) return { text:`Expires in ${days}d`, tone:"brass" };
+        return { text:"Under warranty", tone:"moss" };
 
     };
 
@@ -259,47 +269,35 @@ function Assets(){
         <Layout>
 
 
-            <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-
-                <h1 className="text-3xl font-bold">
-                    Assets
-                </h1>
-
-                {canEdit && !showForm && (
-
+            <PageHeading
+                action={canEdit && !showForm && (
                     <button
                     onClick={() => setShowForm(true)}
-                    className="bg-black text-white px-4 py-2 rounded-lg"
+                    className={primaryBtnCls}
                     >
-                        + Add Asset
+                        Add asset
                     </button>
-
                 )}
-
-            </div>
-
-
-            {error && (
-
-                <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
-                    {error}
-                </div>
-
-            )}
+            >
+                Assets
+            </PageHeading>
 
 
-            <form onSubmit={handleSearchSubmit} className="mb-6 flex gap-2">
+            <ErrorBanner>{error}</ErrorBanner>
+
+
+            <form onSubmit={handleSearchSubmit} className="mb-5 flex gap-2">
 
                 <input
                 placeholder="Search assets by name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border p-2 rounded-lg flex-1"
+                className={`${inputCls} flex-1`}
                 />
 
                 <button
                 type="submit"
-                className="bg-gray-800 text-white px-4 py-2 rounded-lg"
+                className={secondaryBtnCls}
                 >
                     Search
                 </button>
@@ -309,130 +307,131 @@ function Assets(){
 
             {showForm && canEdit && (
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="bg-white p-5 rounded-xl shadow mb-6"
-                    >
+                <Row className="mb-6">
 
-                    <h2 className="font-semibold mb-3 text-gray-700">
-                        {editing ? "Edit Asset" : "Add New Asset"}
-                    </h2>
+                    <form onSubmit={handleSubmit}>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <h2 className="font-display font-semibold mb-3 text-ink">
+                            {editing ? "Edit asset" : "Add new asset"}
+                        </h2>
 
-                        <input
-                        name="name"
-                        placeholder="Asset Name"
-                        value={form.name}
-                        onChange={handleChange}
-                        className="border p-2 rounded"
-                        required
-                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
-                        <input
-                        name="category"
-                        placeholder="Category"
-                        value={form.category}
-                        onChange={handleChange}
-                        className="border p-2 rounded"
-                        required
-                        />
-
-                        <input
-                        name="purchasePrice"
-                        type="number"
-                        placeholder="Purchase Price"
-                        value={form.purchasePrice}
-                        onChange={handleChange}
-                        className="border p-2 rounded"
-                        required
-                        />
-
-                        <input
-                        name="serialNumber"
-                        placeholder="Serial Number (optional)"
-                        value={form.serialNumber}
-                        onChange={handleChange}
-                        className="border p-2 rounded"
-                        />
-
-                        <div>
-                            <label className="text-xs text-gray-500 block mb-1">
-                                Purchase Date
-                            </label>
                             <input
-                            name="purchaseDate"
-                            type="date"
-                            value={form.purchaseDate}
+                            name="name"
+                            placeholder="Asset name"
+                            value={form.name}
                             onChange={handleChange}
-                            className="border p-2 rounded w-full"
+                            className={inputCls}
                             required
                             />
-                        </div>
 
-                        <div>
-                            <label className="text-xs text-gray-500 block mb-1">
-                                Warranty Expiry
-                            </label>
                             <input
-                            name="warrantyExpiry"
-                            type="date"
-                            value={form.warrantyExpiry}
+                            name="category"
+                            placeholder="Category"
+                            value={form.category}
                             onChange={handleChange}
-                            className="border p-2 rounded w-full"
+                            className={inputCls}
                             required
                             />
+
+                            <input
+                            name="purchasePrice"
+                            type="number"
+                            placeholder="Purchase price"
+                            value={form.purchasePrice}
+                            onChange={handleChange}
+                            className={inputCls}
+                            required
+                            />
+
+                            <input
+                            name="serialNumber"
+                            placeholder="Serial number (optional)"
+                            value={form.serialNumber}
+                            onChange={handleChange}
+                            className={inputCls}
+                            />
+
+                            <div>
+                                <label className="text-xs text-slate block mb-1">
+                                    Purchase date
+                                </label>
+                                <input
+                                name="purchaseDate"
+                                type="date"
+                                value={form.purchaseDate}
+                                onChange={handleChange}
+                                className={inputCls}
+                                required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-xs text-slate block mb-1">
+                                    Warranty expiry
+                                </label>
+                                <input
+                                name="warrantyExpiry"
+                                type="date"
+                                value={form.warrantyExpiry}
+                                onChange={handleChange}
+                                className={inputCls}
+                                required
+                                />
+                            </div>
+
                         </div>
 
-                    </div>
+                        <textarea
+                        name="description"
+                        placeholder="Description (optional)"
+                        value={form.description}
+                        onChange={handleChange}
+                        className={`${inputCls} mt-3`}
+                        rows="2"
+                        />
 
-                    <textarea
-                    name="description"
-                    placeholder="Description (optional)"
-                    value={form.description}
-                    onChange={handleChange}
-                    className="border p-2 rounded w-full mt-3"
-                    rows="2"
-                    />
+                        <div className="flex gap-2 mt-4">
 
-                    <div className="flex gap-2 mt-4">
+                            <button
+                            type="submit"
+                            disabled={saving}
+                            className={primaryBtnCls}
+                            >
+                                {saving
+                                    ? "Saving..."
+                                    : editing ? "Update asset" : "Add asset"
+                                }
+                            </button>
 
-                        <button
-                        type="submit"
-                        disabled={saving}
-                        className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
-                        >
-                            {saving
-                                ? "Saving..."
-                                : editing ? "Update Asset" : "Add Asset"
-                            }
-                        </button>
+                            <button
+                            type="button"
+                            onClick={handleCancelEdit}
+                            className={secondaryBtnCls}
+                            >
+                                Cancel
+                            </button>
 
-                        <button
-                        type="button"
-                        onClick={handleCancelEdit}
-                        className="bg-gray-200 px-4 py-2 rounded"
-                        >
-                            Cancel
-                        </button>
+                        </div>
 
-                    </div>
+                    </form>
 
-                </form>
+                </Row>
 
             )}
 
 
-            <div className="grid gap-3">
+            <div className="flex flex-col gap-px bg-border">
 
                 {assets.length === 0 && (
 
-                    <div className="bg-white p-5 rounded-xl shadow text-gray-500">
+                    <EmptyState>
                         {canEdit
                             ? "No assets yet. Add your first one above."
                             : "No assets in this workspace yet."
                         }
-                    </div>
+                    </EmptyState>
 
                 )}
 
@@ -442,53 +441,45 @@ function Assets(){
 
                     return (
 
-                        <div
+                        <Row
                         key={asset._id}
-                        className="bg-white p-4 rounded-xl shadow flex justify-between items-center flex-wrap gap-3"
+                        className="flex justify-between items-center flex-wrap gap-3"
                         >
 
                             <div className="min-w-0">
 
                                 <div className="flex items-center gap-2 flex-wrap">
 
-                                    <h2 className="text-lg font-bold">
+                                    <h2 className="font-display text-base font-semibold text-ink">
                                         {asset.name}
                                     </h2>
 
-                                    {w && (
-                                        <span className={`text-xs px-2 py-0.5 rounded-full ${w.cls}`}>
-                                            {w.text}
-                                        </span>
-                                    )}
+                                    {w && <Tag tone={w.tone}>{w.text}</Tag>}
 
-                                    {asset.invoiceUrl && (
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                                            Invoice
-                                        </span>
-                                    )}
+                                    {asset.invoiceUrl && <Tag tone="ink">Invoice on file</Tag>}
 
                                 </div>
 
-                                <p className="text-gray-500 text-sm">
-                                    {asset.category} &middot; ₹ {asset.purchasePrice}
+                                <p className="text-slate text-sm mt-0.5">
+                                    {asset.category} · <span className="font-mono">₹{asset.purchasePrice}</span>
                                 </p>
 
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-4 items-center text-sm shrink-0">
 
                                 <button
                                 onClick={() => setSelectedAsset(asset)}
-                                className="border border-gray-300 px-3 py-1.5 rounded text-sm hover:bg-gray-50"
+                                className="text-ink hover:text-brass-strong transition-colors"
                                 >
-                                    View Details
+                                    View details
                                 </button>
 
                                 {canEdit && (
 
                                     <button
                                     onClick={() => handleEdit(asset)}
-                                    className="bg-blue-500 text-white px-3 py-1.5 rounded text-sm"
+                                    className="text-ink hover:text-brass-strong transition-colors"
                                     >
                                         Edit
                                     </button>
@@ -501,7 +492,7 @@ function Assets(){
 
                                     <button
                                     onClick={() => handleDelete(asset._id)}
-                                    className="bg-red-500 text-white px-3 py-1.5 rounded text-sm"
+                                    className="text-rust hover:underline"
                                     >
                                         Delete
                                     </button>
@@ -510,7 +501,7 @@ function Assets(){
 
                             </div>
 
-                        </div>
+                        </Row>
 
                     );
 
@@ -521,24 +512,24 @@ function Assets(){
 
             {pagination.pages > 1 && (
 
-                <div className="flex justify-center gap-2 mt-6">
+                <div className="flex justify-center items-center gap-3 mt-6">
 
                     <button
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
-                    className="px-3 py-1 rounded border disabled:opacity-40"
+                    className="text-sm border border-border px-3 py-1.5 text-ink hover:border-ink disabled:opacity-40 disabled:hover:border-border transition-colors"
                     >
                         Prev
                     </button>
 
-                    <span className="px-3 py-1 text-gray-600">
+                    <span className="text-sm text-slate">
                         Page {pagination.page} of {pagination.pages}
                     </span>
 
                     <button
                     disabled={page >= pagination.pages}
                     onClick={() => setPage(page + 1)}
-                    className="px-3 py-1 rounded border disabled:opacity-40"
+                    className="text-sm border border-border px-3 py-1.5 text-ink hover:border-ink disabled:opacity-40 disabled:hover:border-border transition-colors"
                     >
                         Next
                     </button>

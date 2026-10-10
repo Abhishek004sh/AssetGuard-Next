@@ -1,1 +1,63 @@
 @import "tailwindcss";
+
+/*
+ * AssetGuard design tokens — "The Registry"
+ *
+ * The subject is a register of physical assets and recurring costs, so the
+ * visual language borrows from ledgers and asset tags rather than generic
+ * SaaS cards: flat planes, hairline rules, one metallic accent, and real
+ * monospace used only where the data is genuinely tabular (serials, prices,
+ * dates, IDs).
+ */
+@theme {
+
+    --color-ink: #17212b;
+    --color-ink-soft: #27343f;
+    --color-paper: #f1f4f5;
+    --color-surface: #ffffff;
+
+    --color-brass: #b8862e;
+    --color-brass-strong: #8e6a22;
+    --color-brass-tint: #f6ead2;
+
+    --color-moss: #2f6f4e;
+    --color-moss-tint: #e4efe8;
+
+    --color-rust: #a23e2b;
+    --color-rust-tint: #f6e4e0;
+
+    --color-slate: #5b6670;
+    --color-border: #d8dee1;
+
+    --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
+    --font-sans: "IBM Plex Sans", ui-sans-serif, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+}
+
+body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Numbers in a ledger line up on their digits, not just their left edge. */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+/* One visible focus style everywhere, instead of the browser default
+   clashing with the ink/paper palette. */
+:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

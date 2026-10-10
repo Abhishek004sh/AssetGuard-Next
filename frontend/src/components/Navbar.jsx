@@ -4,20 +4,20 @@ import { AuthContext } from "../context/AuthContext";
 import { WorkspaceContext } from "../context/WorkspaceContext";
 
 
-// Small coloured label so the user can always see what they're
-// allowed to do in the workspace they're currently looking at.
+// A small status chip, not an eyebrow label — tells you at a glance what
+// you're allowed to do in the workspace you're currently looking at.
 function RoleBadge({ role }){
 
     if(!role) return null;
 
     const styles = {
-        OWNER: "bg-green-100 text-green-700",
-        MEMBER: "bg-blue-100 text-blue-700",
-        VIEWER: "bg-gray-200 text-gray-600"
+        OWNER:  "bg-brass-tint text-brass-strong",
+        MEMBER: "bg-moss-tint text-moss",
+        VIEWER: "bg-ink/5 text-slate"
     };
 
     return (
-        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${styles[role] || styles.VIEWER}`}>
+        <span className={`text-xs font-mono px-2 py-0.5 ${styles[role] || styles.VIEWER}`}>
             {role}
         </span>
     );
@@ -50,13 +50,13 @@ function Navbar(){
 
     return (
 
-        <header className="bg-white shadow px-4 py-3 flex justify-between items-center flex-wrap gap-3">
+        <header className="bg-paper border-b border-border px-6 py-3.5 flex justify-between items-center flex-wrap gap-3">
 
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
 
-                <span className="text-sm text-gray-500">
-                    Workspace:
+                <span className="text-xs text-slate font-mono">
+                    workspace
                 </span>
 
                 {workspaces.length > 0 ? (
@@ -64,7 +64,7 @@ function Navbar(){
                     <select
                     value={currentWorkspaceId || ""}
                     onChange={(e) => switchWorkspace(e.target.value)}
-                    className="border rounded-lg px-2 py-1 text-sm bg-white"
+                    className="border border-border bg-surface px-2.5 py-1 text-sm text-ink focus:border-brass"
                     >
 
                         {workspaces.map(ws => (
@@ -79,8 +79,8 @@ function Navbar(){
 
                 ) : (
 
-                    <span className="text-sm text-gray-400">
-                        none
+                    <span className="text-sm text-slate">
+                        none yet
                     </span>
 
                 )}
@@ -93,16 +93,16 @@ function Navbar(){
             <div className="flex items-center gap-4">
 
                 {user && (
-                    <span className="text-sm text-gray-500">
-                        Hi, {user.name}
+                    <span className="text-sm text-slate">
+                        {user.name}
                     </span>
                 )}
 
                 <button
                 onClick={handleLogout}
-                className="text-sm bg-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-300 transition"
+                className="text-sm border border-border px-3 py-1.5 text-ink hover:border-ink transition-colors"
                 >
-                    Logout
+                    Log out
                 </button>
 
             </div>

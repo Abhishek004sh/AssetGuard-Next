@@ -5,28 +5,40 @@ import { getDashboardStats } from "../services/dashboard.service";
 import { WorkspaceContext } from "../context/WorkspaceContext";
 
 
-function StatCard({ label, value, sub, accent }){
+// A flat registry tile, not a shadowed card. The top rule is brass only
+// when the number is something to act on; otherwise it stays quiet ink.
+function StatTile({ label, value, sub, needsAttention, to }){
 
-    return (
+    const content = (
 
-        <div className="bg-white p-5 rounded-xl shadow">
+        <div
+        className={`bg-surface border-t-2 ${needsAttention ? "border-brass" : "border-ink/15"} px-5 py-4 h-full`}
+        >
 
-            <h2 className="text-gray-500 text-sm">
+            <p className="text-sm text-slate">
                 {label}
-            </h2>
+            </p>
 
-            <p className={`text-3xl font-bold mt-1 ${accent || ""}`}>
+            <p className="font-display text-3xl font-semibold text-ink mt-1.5 tabular-nums">
                 {value}
             </p>
 
             {sub && (
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-slate mt-1">
                     {sub}
                 </p>
             )}
 
         </div>
 
+    );
+
+    if(!to) return content;
+
+    return (
+        <Link to={to} className="block hover:brightness-[0.98] transition">
+            {content}
+        </Link>
     );
 
 }
@@ -75,31 +87,33 @@ function Dashboard(){
 
     },[currentWorkspaceId]);
 
+    const roleLabel = role === "OWNER" ? "owner" : String(role || "").toLowerCase();
+
     return (
 
         <Layout>
 
 
-            <div className="mb-6">
+            <div className="mb-7">
 
-                <h1 className="text-3xl font-bold">
+                <h1 className="font-display text-3xl font-semibold text-ink">
                     Dashboard
                 </h1>
 
                 {currentWorkspace && (
-                    <p className="text-gray-500 text-sm mt-1">
-                        {currentWorkspace.name} &middot; you are {role === "OWNER" ? "the owner" : `a ${String(role || "").toLowerCase()}`}
+                    <p className="text-slate text-sm mt-1.5">
+                        {currentWorkspace.name}{roleLabel && ` — you're the ${roleLabel} here`}
                     </p>
                 )}
 
             </div>
 
             {loading && (
-                <p className="text-gray-500">Loading...</p>
+                <p className="text-slate text-sm">Loading...</p>
             )}
 
             {!loading && error && (
-                <div className="bg-white p-5 rounded-xl shadow text-red-500">
+                <div className="bg-rust-tint border border-rust/20 px-5 py-4 text-rust text-sm">
                     {error}
                 </div>
             )}
@@ -108,71 +122,69 @@ function Dashboard(){
 
                 <>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border">
 
-                        <Link to="/assets">
-                            <StatCard
-                                label="Total Assets"
-                                value={stats.assets.total}
-                            />
-                        </Link>
-
-                        <StatCard
-                            label="Warranty Expiring Soon"
-                            value={stats.assets.warrantyExpiring}
-                            sub="within 30 days"
-                            accent={stats.assets.warrantyExpiring > 0 ? "text-orange-500" : ""}
+                        <StatTile
+                            label="Total assets"
+                            value={stats.assets.total}
+                            to="/assets"
                         />
 
-                        <Link to="/subscriptions">
-                            <StatCard
-                                label="Active Subscriptions"
-                                value={stats.subscriptions.total}
-                            />
-                        </Link>
+                        <StatTile
+                            label="Warranty expiring soon"
+                            value={stats.assets.warrantyExpiring}
+                            sub="within 30 days"
+                            needsAttention={stats.assets.warrantyExpiring > 0}
+                        />
 
-                        <StatCard
-                            label="Monthly Expense"
-                            value={`₹ ${stats.subscriptions.monthlyExpense}`}
+                        <StatTile
+                            label="Active subscriptions"
+                            value={stats.subscriptions.total}
+                            to="/subscriptions"
+                        />
+
+                        <StatTile
+                            label="Monthly expense"
+                            value={<span className="font-mono">₹{stats.subscriptions.monthlyExpense}</span>}
                         />
 
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border mt-px">
 
-                        <div className="bg-white p-5 rounded-xl shadow">
+                        <div className="bg-surface px-5 py-4">
 
-                            <h2 className="font-semibold mb-2">
-                                Upcoming Renewals
+                            <h2 className="font-medium text-ink mb-1.5">
+                                Upcoming renewals
                             </h2>
 
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-slate text-sm">
                                 {stats.subscriptions.upcomingRenewals} subscription(s)
                                 renewing in the next 30 days.
                             </p>
 
                             <Link
                             to="/subscriptions"
-                            className="text-blue-600 text-sm underline mt-2 inline-block"
+                            className="text-brass-strong text-sm mt-2.5 inline-block hover:underline"
                             >
                                 View subscriptions
                             </Link>
 
                         </div>
 
-                        <div className="bg-white p-5 rounded-xl shadow">
+                        <div className="bg-surface px-5 py-4">
 
-                            <h2 className="font-semibold mb-2">
+                            <h2 className="font-medium text-ink mb-1.5">
                                 Notifications
                             </h2>
 
-                            <p className="text-gray-500 text-sm">
-                                Check warranty and renewal alerts.
+                            <p className="text-slate text-sm">
+                                Warranty and renewal alerts for this workspace.
                             </p>
 
                             <Link
                             to="/notifications"
-                            className="text-blue-600 text-sm underline mt-2 inline-block"
+                            className="text-brass-strong text-sm mt-2.5 inline-block hover:underline"
                             >
                                 View notifications
                             </Link>

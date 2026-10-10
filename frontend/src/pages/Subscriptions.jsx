@@ -6,6 +6,15 @@ import {
 
 import Layout from "../components/Layout";
 import { WorkspaceContext } from "../context/WorkspaceContext";
+import {
+    inputCls,
+    primaryBtnCls,
+    secondaryBtnCls,
+    PageHeading,
+    EmptyState,
+    Row,
+    Tag
+} from "../components/ui";
 
 import {
     getSubscriptions,
@@ -172,22 +181,22 @@ function Subscriptions(){
         <Layout>
 
 
-            <h1 className="text-3xl font-bold mb-6">
+            <PageHeading>
                 Subscriptions
-            </h1>
+            </PageHeading>
 
-            <form onSubmit={handleSearchSubmit} className="mb-6 flex gap-2">
+            <form onSubmit={handleSearchSubmit} className="mb-5 flex gap-2">
 
                 <input
                 placeholder="Search subscriptions by name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border p-2 rounded flex-1"
+                className={`${inputCls} flex-1`}
                 />
 
                 <button
                 type="submit"
-                className="bg-gray-800 text-white px-4 py-2 rounded"
+                className={secondaryBtnCls}
                 >
                     Search
                 </button>
@@ -195,202 +204,198 @@ function Subscriptions(){
             </form>
 
             {canEdit && (
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-5 rounded-xl shadow mb-6"
-                >
 
-                <h2 className="font-semibold mb-3 text-gray-700">
-                    {editing ? "Edit Subscription" : "Add New Subscription"}
-                </h2>
+                <Row className="mb-6">
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <form onSubmit={handleSubmit}>
 
-                    <input
-                    name="name"
-                    placeholder="Subscription Name"
-                    value={form.name}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                    required
-                    />
+                        <h2 className="font-display font-semibold mb-3 text-ink">
+                            {editing ? "Edit subscription" : "Add new subscription"}
+                        </h2>
 
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
-                    <input
-                    name="provider"
-                    placeholder="Provider"
-                    value={form.provider}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                    required
-                    />
+                            <input
+                            name="name"
+                            placeholder="Subscription name"
+                            value={form.name}
+                            onChange={handleChange}
+                            className={inputCls}
+                            required
+                            />
 
+                            <input
+                            name="provider"
+                            placeholder="Provider"
+                            value={form.provider}
+                            onChange={handleChange}
+                            className={inputCls}
+                            required
+                            />
 
-                    <input
-                    name="amount"
-                    type="number"
-                    placeholder="Amount"
-                    value={form.amount}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                    required
-                    />
+                            <input
+                            name="amount"
+                            type="number"
+                            placeholder="Amount"
+                            value={form.amount}
+                            onChange={handleChange}
+                            className={inputCls}
+                            required
+                            />
 
+                            <select
+                            name="billingCycle"
+                            value={form.billingCycle}
+                            onChange={handleChange}
+                            className={inputCls}
+                            >
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                            </select>
 
-                    <select
-                    name="billingCycle"
-                    value={form.billingCycle}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                    >
-                        <option value="MONTHLY">Monthly</option>
-                        <option value="YEARLY">Yearly</option>
-                    </select>
+                            <div>
+                                <label className="text-xs text-slate block mb-1">
+                                    Start date
+                                </label>
+                                <input
+                                name="startDate"
+                                type="date"
+                                value={form.startDate}
+                                onChange={handleChange}
+                                className={inputCls}
+                                required
+                                />
+                            </div>
 
+                            <div>
+                                <label className="text-xs text-slate block mb-1">
+                                    Next billing date
+                                </label>
+                                <input
+                                name="nextBillingDate"
+                                type="date"
+                                value={form.nextBillingDate}
+                                onChange={handleChange}
+                                className={inputCls}
+                                required
+                                />
+                            </div>
 
-                    <div>
-                        <label className="text-xs text-gray-500 block mb-1">
-                            Start Date
-                        </label>
-                        <input
-                        name="startDate"
-                        type="date"
-                        value={form.startDate}
-                        onChange={handleChange}
-                        className="border p-2 rounded w-full"
-                        required
-                        />
-                    </div>
+                            <input
+                            name="category"
+                            placeholder="Category (optional)"
+                            value={form.category}
+                            onChange={handleChange}
+                            className={inputCls}
+                            />
 
-                    <div>
-                        <label className="text-xs text-gray-500 block mb-1">
-                            Next Billing Date
-                        </label>
-                        <input
-                        name="nextBillingDate"
-                        type="date"
-                        value={form.nextBillingDate}
-                        onChange={handleChange}
-                        className="border p-2 rounded w-full"
-                        required
-                        />
-                    </div>
-
-                    <input
-                    name="category"
-                    placeholder="Category (optional)"
-                    value={form.category}
-                    onChange={handleChange}
-                    className="border p-2 rounded"
-                    />
-
-                </div>
+                        </div>
 
 
-                <div className="flex gap-2 mt-4">
+                        <div className="flex gap-2 mt-4">
 
-                    <button
-                    type="submit"
-                    disabled={saving}
-                    className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
-                    >
-                        {saving
-                            ? "Saving..."
-                            : editing ? "Update Subscription" : "Add Subscription"
-                        }
-                    </button>
+                            <button
+                            type="submit"
+                            disabled={saving}
+                            className={primaryBtnCls}
+                            >
+                                {saving
+                                    ? "Saving..."
+                                    : editing ? "Update subscription" : "Add subscription"
+                                }
+                            </button>
 
-                    {editing && (
+                            {editing && (
 
-                        <button
-                        type="button"
-                        onClick={handleCancelEdit}
-                        className="bg-gray-300 px-4 py-2 rounded"
-                        >
-                            Cancel
-                        </button>
+                                <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                className={secondaryBtnCls}
+                                >
+                                    Cancel
+                                </button>
 
-                    )}
+                            )}
 
-                </div>
+                        </div>
 
+                    </form>
 
-            </form>
+                </Row>
+
             )}
 
-            <div className="grid gap-4">
+            <div className="flex flex-col gap-px bg-border">
 
 
                 {subscriptions.length === 0 && (
 
-                    <div className="bg-white p-5 rounded-xl shadow text-gray-500">
+                    <EmptyState>
                         No subscriptions yet. Add your first one above.
-                    </div>
+                    </EmptyState>
 
                 )}
 
                 {
                     subscriptions.map((sub)=>(
 
-
-                        <div
+                        <Row
                         key={sub._id}
-                        className="bg-white p-5 rounded-xl shadow"
+                        className="flex justify-between items-start flex-wrap gap-3"
                         >
 
+                            <div>
 
-                            <div className="flex justify-between items-start flex-wrap gap-2">
+                                <div className="flex items-center gap-2 flex-wrap">
 
-                                <div>
-
-                                    <h2 className="text-xl font-bold">
+                                    <h2 className="font-display text-base font-semibold text-ink">
                                         {sub.name}
-                                        <span className="text-sm font-normal text-gray-500 ml-2">
-                                            ({sub.status})
-                                        </span>
                                     </h2>
 
-                                    <p className="text-gray-500 text-sm">
-                                        {sub.provider} &middot; {sub.billingCycle}
-                                    </p>
+                                    <Tag tone={sub.status === "ACTIVE" ? "moss" : "ink"}>
+                                        {sub.status}
+                                    </Tag>
 
                                 </div>
 
-                                <div>
+                                <p className="text-slate text-sm mt-0.5">
+                                    {sub.provider} · {sub.billingCycle.toLowerCase()}
+                                </p>
 
-                                    {canEdit && (
-                                        <button
-                                            onClick={() => handleEdit(sub)}
-                                            className="bg-blue-500 text-white px-3 py-1 rounded mr-2 text-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                    )}
+                                <p className="mt-2 font-mono text-ink">
+                                    ₹{sub.amount}
+                                </p>
 
-                                    {/* Delete is owner-only; backend enforces it too */}
-                                    {isOwner && (
-                                        <button
-                                            onClick={() => handleDelete(sub._id)}
-                                            className="bg-red-500 text-white px-3 py-1 rounded text-sm"
-                                        >
-                                            Delete
-                                        </button>
-                                    )}
-
-                                </div>
+                                <p className="text-sm text-slate">
+                                    Next billing: {sub.nextBillingDate?.slice(0, 10)}
+                                </p>
 
                             </div>
 
-                            <p className="mt-2">
-                                ₹ {sub.amount}
-                            </p>
+                            <div className="flex gap-4 items-center text-sm shrink-0">
 
-                            <p className="text-sm text-gray-500">
-                                Next billing: {sub.nextBillingDate?.slice(0, 10)}
-                            </p>
+                                {canEdit && (
+                                    <button
+                                        onClick={() => handleEdit(sub)}
+                                        className="text-ink hover:text-brass-strong transition-colors"
+                                    >
+                                        Edit
+                                    </button>
+                                )}
 
-                        </div>
+                                {/* Delete is owner-only; backend enforces it too */}
+                                {isOwner && (
+                                    <button
+                                        onClick={() => handleDelete(sub._id)}
+                                        className="text-rust hover:underline"
+                                    >
+                                        Delete
+                                    </button>
+                                )}
 
+                            </div>
+
+                        </Row>
 
                     ))
                 }
@@ -400,24 +405,24 @@ function Subscriptions(){
 
             {pagination.pages > 1 && (
 
-                <div className="flex justify-center gap-2 mt-6">
+                <div className="flex justify-center items-center gap-3 mt-6">
 
                     <button
                     disabled={page <= 1}
                     onClick={() => setPage(page - 1)}
-                    className="px-3 py-1 rounded border disabled:opacity-40"
+                    className="text-sm border border-border px-3 py-1.5 text-ink hover:border-ink disabled:opacity-40 disabled:hover:border-border transition-colors"
                     >
                         Prev
                     </button>
 
-                    <span className="px-3 py-1 text-gray-600">
+                    <span className="text-sm text-slate">
                         Page {pagination.page} of {pagination.pages}
                     </span>
 
                     <button
                     disabled={page >= pagination.pages}
                     onClick={() => setPage(page + 1)}
-                    className="px-3 py-1 rounded border disabled:opacity-40"
+                    className="text-sm border border-border px-3 py-1.5 text-ink hover:border-ink disabled:opacity-40 disabled:hover:border-border transition-colors"
                     >
                         Next
                     </button>

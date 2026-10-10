@@ -16,15 +16,21 @@ function Sidebar(){
 
     return (
 
-        <div className="w-64 min-h-screen bg-gray-900 text-white p-5">
+        <div className="w-60 shrink-0 min-h-screen bg-ink flex flex-col">
 
+            {/* Wordmark styled like a stamped asset tag: a small brass
+                square standing in for the tag, the name set tight beside it. */}
+            <div className="flex items-center gap-2.5 px-5 pt-7 pb-8">
 
-            <h2 className="text-2xl font-bold mb-8">
-                AssetGuard
-            </h2>
+                <span className="w-3 h-3 bg-brass shrink-0" aria-hidden="true" />
 
+                <span className="font-display text-lg font-semibold text-white tracking-tight">
+                    AssetGuard
+                </span>
 
-            <nav className="space-y-1">
+            </div>
+
+            <nav className="flex-1 px-3">
 
                 {navItems.map((item) => {
 
@@ -35,13 +41,24 @@ function Sidebar(){
                         <Link
                         key={item.to}
                         to={item.to}
-                        className={`block px-3 py-2 rounded-lg transition ${
+                        className={`relative flex items-center h-10 pl-4 pr-3 text-sm transition-colors ${
                             isActive
-                                ? "bg-blue-500 text-white"
-                                : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                ? "text-white font-medium"
+                                : "text-slate-300/70 hover:text-white"
                         }`}
+                        style={{ color: isActive ? "#ffffff" : undefined }}
                         >
+                            {/* Left spine mark on the active item, in place of
+                                a filled pill background. */}
+                            {isActive && (
+                                <span
+                                className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] bg-brass"
+                                aria-hidden="true"
+                                />
+                            )}
+
                             {item.label}
+
                         </Link>
 
                     );
@@ -50,6 +67,9 @@ function Sidebar(){
 
             </nav>
 
+            <div className="px-5 py-5 text-xs text-slate-400/60 border-t border-white/10">
+                Asset &amp; subscription registry
+            </div>
 
         </div>
 

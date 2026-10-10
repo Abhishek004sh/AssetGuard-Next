@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { uploadInvoice } from "../services/asset.service";
+import { primaryBtnCls, secondaryBtnCls } from "../components/ui";
 
 
-function Row({ label, value }){
+function Field({ label, value }){
 
     return (
 
-        <div className="py-2 border-b last:border-b-0">
+        <div className="py-2.5 border-b border-border last:border-b-0">
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate">
                 {label}
             </p>
 
-            <p className="text-gray-800">
-                {value || "-"}
+            <p className="text-ink mt-0.5">
+                {value || "—"}
             </p>
 
         </div>
@@ -79,24 +80,24 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
     return (
 
         <div
-        className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50"
+        className="fixed inset-0 bg-ink/50 flex items-center justify-center p-4 z-50"
         onClick={onClose}
         >
 
             <div
-            className="bg-white rounded-xl shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            className="bg-paper border border-border w-full max-w-lg max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
             >
 
-                <div className="flex justify-between items-start p-5 border-b">
+                <div className="flex justify-between items-start p-5 border-b border-border bg-surface">
 
                     <div>
 
-                        <h2 className="text-2xl font-bold">
+                        <h2 className="font-display text-xl font-semibold text-ink">
                             {asset.name}
                         </h2>
 
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-slate text-sm mt-0.5">
                             {asset.category}
                         </p>
 
@@ -104,7 +105,7 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
 
                     <button
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-700 text-2xl leading-none"
+                    className="text-slate hover:text-ink text-2xl leading-none"
                     aria-label="Close"
                     >
                         &times;
@@ -115,25 +116,25 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
 
                 <div className="p-5">
 
-                    <Row label="Purchase Price" value={`₹ ${asset.purchasePrice}`} />
+                    <Field label="Purchase price" value={<span className="font-mono">₹{asset.purchasePrice}</span>} />
 
-                    <Row label="Purchase Date" value={formatDate(asset.purchaseDate)} />
+                    <Field label="Purchase date" value={formatDate(asset.purchaseDate)} />
 
-                    <Row label="Warranty Expiry" value={formatDate(asset.warrantyExpiry)} />
+                    <Field label="Warranty expiry" value={formatDate(asset.warrantyExpiry)} />
 
-                    <Row label="Serial Number" value={asset.serialNumber} />
+                    <Field label="Serial number" value={asset.serialNumber && <span className="font-mono">{asset.serialNumber}</span>} />
 
-                    <Row label="Description" value={asset.description} />
+                    <Field label="Description" value={asset.description} />
 
 
-                    <div className="mt-5 pt-4 border-t">
+                    <div className="mt-5 pt-4 border-t border-border">
 
-                        <h3 className="font-semibold mb-2">
+                        <h3 className="font-medium text-ink mb-2">
                             Invoice
                         </h3>
 
                         {error && (
-                            <p className="text-red-500 text-sm mb-2">
+                            <p className="text-rust text-sm mb-2">
                                 {error}
                             </p>
                         )}
@@ -146,9 +147,9 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
                                 href={asset.invoiceUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="bg-blue-600 text-white px-4 py-2 rounded text-sm"
+                                className={`${primaryBtnCls} inline-block`}
                                 >
-                                    View Invoice
+                                    View invoice
                                 </a>
 
                                 {canEdit && (
@@ -158,13 +159,13 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
                                         <input
                                         type="file"
                                         onChange={(e) => setFile(e.target.files[0])}
-                                        className="text-sm"
+                                        className="text-sm text-slate"
                                         />
 
                                         <button
                                         onClick={handleUpload}
                                         disabled={!file || uploading}
-                                        className="bg-gray-700 text-white px-3 py-1.5 rounded text-sm disabled:opacity-50"
+                                        className={secondaryBtnCls}
                                         >
                                             {uploading ? "Uploading..." : "Replace"}
                                         </button>
@@ -182,22 +183,22 @@ function AssetDetailsModal({ asset, canEdit, onClose, onInvoiceUploaded }){
                                 <input
                                 type="file"
                                 onChange={(e) => setFile(e.target.files[0])}
-                                className="text-sm"
+                                className="text-sm text-slate"
                                 />
 
                                 <button
                                 onClick={handleUpload}
                                 disabled={!file || uploading}
-                                className="bg-gray-800 text-white px-4 py-2 rounded text-sm disabled:opacity-50"
+                                className={primaryBtnCls}
                                 >
-                                    {uploading ? "Uploading..." : "Upload Invoice"}
+                                    {uploading ? "Uploading..." : "Upload invoice"}
                                 </button>
 
                             </div>
 
                         ) : (
 
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-slate text-sm">
                                 No invoice uploaded yet.
                             </p>
 

@@ -4,8 +4,15 @@ import {
 } from "react";
 
 import Layout from "../components/Layout";
-
 import { getNotifications } from "../services/notification.service";
+import { PageHeading, EmptyState, Row, Tag } from "../components/ui";
+
+
+const typeTone = {
+    WARRANTY: "brass",
+    SUBSCRIPTION: "moss",
+    SYSTEM: "ink"
+};
 
 
 function Notifications(){
@@ -49,63 +56,54 @@ function Notifications(){
         <Layout>
 
 
-            <h1 className="text-3xl font-bold mb-6">
+            <PageHeading>
                 Notifications
-            </h1>
+            </PageHeading>
 
 
             {loading && (
-                <p className="text-gray-500">Loading...</p>
+                <p className="text-slate text-sm">Loading...</p>
             )}
 
 
             {!loading && notifications.length === 0 && (
 
-                <div className="bg-white p-5 rounded-xl shadow text-gray-500">
+                <EmptyState>
                     No notifications yet. Warranty and subscription renewal
                     alerts will show up here as they come in.
-                </div>
+                </EmptyState>
 
             )}
 
 
-            <div className="grid gap-3">
+            <div className="flex flex-col gap-px bg-border">
 
                 {
                     notifications.map((note)=>(
 
-                        <div
-                        key={note._id}
-                        className={`bg-white p-4 rounded-xl shadow border-l-4 ${
-                            note.type === "WARRANTY"
-                                ? "border-orange-400"
-                                : note.type === "SUBSCRIPTION"
-                                ? "border-blue-400"
-                                : "border-gray-300"
-                        }`}
-                        >
+                        <Row key={note._id}>
 
-                            <div className="flex justify-between items-start">
+                            <div className="flex justify-between items-start gap-3">
 
-                                <h2 className="font-semibold">
+                                <h2 className="font-medium text-ink">
                                     {note.title}
                                 </h2>
 
-                                <span className="text-xs text-gray-400">
+                                <Tag tone={typeTone[note.type] || "ink"}>
                                     {note.type}
-                                </span>
+                                </Tag>
 
                             </div>
 
-                            <p className="text-gray-600 text-sm mt-1">
+                            <p className="text-slate text-sm mt-1">
                                 {note.message}
                             </p>
 
-                            <p className="text-xs text-gray-400 mt-2">
+                            <p className="text-xs text-slate/70 mt-2">
                                 {new Date(note.createdAt).toLocaleString()}
                             </p>
 
-                        </div>
+                        </Row>
 
                     ))
                 }

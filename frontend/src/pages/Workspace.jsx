@@ -7,6 +7,15 @@ import {
 
 import Layout from "../components/Layout";
 import { WorkspaceContext } from "../context/WorkspaceContext";
+import {
+    inputCls,
+    primaryBtnCls,
+    secondaryBtnCls,
+    PageHeading,
+    ErrorBanner,
+    Row,
+    Tag
+} from "../components/ui";
 
 import {
     getWorkspaceById,
@@ -16,21 +25,11 @@ import {
 } from "../services/workspace.service";
 
 
-function RoleTag({ role }){
-
-    const styles = {
-        OWNER: "bg-green-100 text-green-700",
-        MEMBER: "bg-blue-100 text-blue-700",
-        VIEWER: "bg-gray-200 text-gray-600"
-    };
-
-    return (
-        <span className={`text-xs px-2 py-0.5 rounded-full ${styles[role] || styles.VIEWER}`}>
-            {role}
-        </span>
-    );
-
-}
+const roleTone = {
+    OWNER: "brass",
+    MEMBER: "moss",
+    VIEWER: "ink"
+};
 
 
 function Workspace(){
@@ -206,28 +205,24 @@ function Workspace(){
 
         <Layout>
 
-            <h1 className="text-3xl font-bold mb-6">
+            <PageHeading>
                 Workspaces
-            </h1>
+            </PageHeading>
 
-            {error && (
-                <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
-                    {error}
-                </div>
-            )}
+            <ErrorBanner>{error}</ErrorBanner>
 
 
             {/* All workspaces this user belongs to */}
-            <div className="bg-white p-5 rounded-xl shadow mb-5">
+            <Row className="mb-6">
 
-                <h2 className="font-semibold mb-3">
-                    Your Workspaces
+                <h2 className="font-display font-semibold text-ink mb-3">
+                    Your workspaces
                 </h2>
 
-                <div className="grid gap-2">
+                <div className="flex flex-col gap-px bg-border border border-border">
 
                     {workspaces.length === 0 && (
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-slate text-sm bg-surface px-4 py-3">
                             You are not part of any workspace yet.
                         </p>
                     )}
@@ -236,30 +231,30 @@ function Workspace(){
 
                         <div
                         key={ws._id}
-                        className={`flex justify-between items-center border rounded-lg p-3 ${
-                            ws._id === currentWorkspaceId
-                                ? "border-blue-400 bg-blue-50"
-                                : "border-gray-200"
+                        className={`flex justify-between items-center px-4 py-3 bg-surface ${
+                            ws._id === currentWorkspaceId ? "border-l-2 border-l-brass" : ""
                         }`}
                         >
 
                             <div className="flex items-center gap-2 flex-wrap">
 
-                                <span className="font-medium">
+                                <span className="font-medium text-ink">
                                     {ws.name}
                                 </span>
 
-                                <RoleTag role={ws.myRole} />
+                                <Tag tone={roleTone[ws.myRole] || "ink"}>
+                                    {ws.myRole}
+                                </Tag>
 
-                                <span className="text-xs text-gray-400">
-                                    {ws.memberCount} member(s)
+                                <span className="text-xs text-slate">
+                                    {ws.memberCount} member{ws.memberCount === 1 ? "" : "s"}
                                 </span>
 
                             </div>
 
                             {ws._id === currentWorkspaceId ? (
 
-                                <span className="text-xs text-blue-600 font-medium">
+                                <span className="text-xs text-brass-strong font-medium">
                                     Currently viewing
                                 </span>
 
@@ -267,7 +262,7 @@ function Workspace(){
 
                                 <button
                                 onClick={() => switchWorkspace(ws._id)}
-                                className="text-sm border px-3 py-1 rounded hover:bg-gray-50"
+                                className="text-sm border border-border px-3 py-1 text-ink hover:border-ink transition-colors"
                                 >
                                     Switch
                                 </button>
@@ -287,62 +282,64 @@ function Workspace(){
                     placeholder="New workspace name"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="border p-2 rounded flex-1 min-w-[200px]"
+                    className={`${inputCls} flex-1 min-w-[200px]`}
                     />
 
                     <button
                     type="submit"
                     disabled={creating}
-                    className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
+                    className={primaryBtnCls}
                     >
-                        {creating ? "Creating..." : "Create Workspace"}
+                        {creating ? "Creating..." : "Create workspace"}
                     </button>
 
                 </form>
 
-            </div>
+            </Row>
 
 
             {/* Members of the workspace currently selected */}
             {loading && (
-                <p className="text-gray-500">Loading...</p>
+                <p className="text-slate text-sm">Loading...</p>
             )}
 
             {!loading && details && (
 
-                <div className="bg-white p-5 rounded-xl shadow">
+                <Row>
 
-                    <h2 className="font-semibold mb-1">
+                    <h2 className="font-display font-semibold text-ink mb-1">
                         Members of {details.name}
                     </h2>
 
-                    <p className="text-xs text-gray-500 mb-3">
+                    <p className="text-xs text-slate mb-3">
                         {isOwner
                             ? "You own this workspace, so you can add and remove members."
                             : "Only the owner of this workspace can manage members."
                         }
                     </p>
 
-                    <div className="grid gap-2 mb-4">
+                    <div className="flex flex-col gap-px bg-border border border-border mb-4">
 
                         {details.members?.map((member) => (
 
                             <div
                             key={member.user?._id || member._id}
-                            className="flex justify-between items-center border-b py-2 gap-2 flex-wrap"
+                            className="flex justify-between items-center px-4 py-2.5 gap-2 flex-wrap bg-surface"
                             >
 
                                 <div className="flex items-center gap-2 flex-wrap">
 
-                                    <span>
+                                    <span className="text-ink">
                                         {member.user?.name}
                                     </span>
 
-                                    <span className="text-sm text-gray-500">
+                                    <span className="text-sm text-slate">
                                         {member.user?.email}
                                     </span>
 
-                                    <RoleTag role={member.role} />
+                                    <Tag tone={roleTone[member.role] || "ink"}>
+                                        {member.role}
+                                    </Tag>
 
                                 </div>
 
@@ -350,7 +347,7 @@ function Workspace(){
 
                                     <button
                                     onClick={() => handleRemoveMember(member.user?._id)}
-                                    className="text-sm text-red-600 hover:underline"
+                                    className="text-sm text-rust hover:underline"
                                     >
                                         Remove
                                     </button>
@@ -368,23 +365,23 @@ function Workspace(){
 
                         <>
 
-                            <h3 className="font-semibold mb-2 text-sm">
-                                Add a Member
+                            <h3 className="font-medium text-ink mb-2 text-sm">
+                                Add a member
                             </h3>
 
-                            <p className="text-xs text-gray-500 mb-2">
+                            <p className="text-xs text-slate mb-2">
                                 They must already have an AssetGuard account.
                                 Members can add and edit, but only you can delete.
                             </p>
 
                             {memberMessage && (
-                                <p className="text-sm mb-2 text-green-600">
+                                <p className="text-sm mb-2 text-moss">
                                     {memberMessage}
                                 </p>
                             )}
 
                             {memberError && (
-                                <p className="text-sm mb-2 text-red-500">
+                                <p className="text-sm mb-2 text-rust">
                                     {memberError}
                                 </p>
                             )}
@@ -399,7 +396,7 @@ function Workspace(){
                                 onChange={(e) =>
                                     setMemberForm({ ...memberForm, email: e.target.value })
                                 }
-                                className="border p-2 rounded flex-1 min-w-[200px]"
+                                className={`${inputCls} flex-1 min-w-[200px]`}
                                 required
                                 />
 
@@ -408,7 +405,8 @@ function Workspace(){
                                 onChange={(e) =>
                                     setMemberForm({ ...memberForm, role: e.target.value })
                                 }
-                                className="border p-2 rounded"
+                                className={inputCls}
+                                style={{ width: "auto" }}
                                 >
                                     <option value="MEMBER">Member (can add/edit)</option>
                                     <option value="VIEWER">Viewer (read only)</option>
@@ -416,7 +414,7 @@ function Workspace(){
 
                                 <button
                                 type="submit"
-                                className="bg-black text-white px-4 py-2 rounded"
+                                className={secondaryBtnCls}
                                 >
                                     Add
                                 </button>
@@ -427,7 +425,7 @@ function Workspace(){
 
                     )}
 
-                </div>
+                </Row>
 
             )}
 

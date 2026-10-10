@@ -100,87 +100,112 @@ function Login(){
 
     return (
 
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex bg-paper">
 
-            <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+            {/* Ink panel - same spine as the app shell, so login feels
+                like the front cover of the register rather than a
+                separate marketing screen. */}
+            <div className="hidden md:flex w-[38%] bg-ink flex-col justify-between p-10">
 
-                <h1 className="text-3xl font-bold mb-6">
-                    Login
-                </h1>
+                <div className="flex items-center gap-2.5">
+                    <span className="w-3 h-3 bg-brass shrink-0" aria-hidden="true" />
+                    <span className="font-display text-lg font-semibold text-white">
+                        AssetGuard
+                    </span>
+                </div>
 
-                {error && (
+                <p className="font-display text-2xl text-white/90 leading-snug max-w-xs">
+                    One record for every asset and subscription your team owns.
+                </p>
 
-                    <p className="text-red-500 mb-4">
-                        {error}
+            </div>
+
+            <div className="flex-1 flex items-center justify-center p-6">
+
+                <div className="w-full max-w-sm">
+
+                    <h1 className="font-display text-2xl font-semibold text-ink mb-1">
+                        Log in
+                    </h1>
+
+                    <p className="text-sm text-slate mb-6">
+                        Enter your details to reach your workspace.
                     </p>
 
-                )}
+                    {error && (
+
+                        <p className="bg-rust-tint border border-rust/20 text-rust text-sm px-3 py-2 mb-4">
+                            {error}
+                        </p>
+
+                    )}
 
 
-                <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="space-y-3">
 
 
-                    <input
+                        <input
 
-                    name="email"
+                        name="email"
 
-                    type="email"
+                        type="email"
 
-                    placeholder="Email"
+                        placeholder="Email"
 
-                    value={form.email}
+                        value={form.email}
 
-                    onChange={handleChange}
+                        onChange={handleChange}
 
-                    className="w-full border p-3 rounded mb-4"
+                        className="w-full border border-border px-3.5 py-2.5 text-sm text-ink focus:border-brass"
 
-                    required
+                        required
 
-                    />
-
-
-
-                    <input
-
-                    name="password"
-
-                    type="password"
-
-                    placeholder="Password"
-
-                    value={form.password}
-
-                    onChange={handleChange}
-
-                    className="w-full border p-3 rounded mb-4"
-
-                    required
-
-                    />
+                        />
 
 
+
+                        <input
+
+                        name="password"
+
+                        type="password"
+
+                        placeholder="Password"
+
+                        value={form.password}
+
+                        onChange={handleChange}
+
+                        className="w-full border border-border px-3.5 py-2.5 text-sm text-ink focus:border-brass"
+
+                        required
+
+                        />
+
+
+
+                        <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-ink text-white py-2.5 text-sm font-medium hover:bg-ink-soft transition-colors disabled:opacity-60"
+                        >
+
+                            {loading ? "Logging in..." : "Log in"}
+
+                        </button>
+
+
+                    </form>
 
                     <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-black text-white p-3 rounded disabled:opacity-60"
+                        type="button"
+                        onClick={() => navigate("/register")}
+                        className="w-full mt-5 text-sm text-brass-strong hover:underline"
                     >
-
-                        {loading ? "Logging in..." : "Login"}
-
+                        Create a new account
                     </button>
 
-
-                </form>
-
-                <button
-                    type="button"
-                    onClick={() => navigate("/register")}
-                    className="w-full mt-4 text-blue-600"
-                >
-                    Create a new account
-                </button>
-
+                </div>
 
             </div>
 
